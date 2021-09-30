@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tokenized Calculator", "Tokenized Calculator\Tokenized Calculator.csproj", "{D12C47C5-05BE-4B84-9B4B-684DF8DA8AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tokenized Calculator", "Tokenized Calculator\Tokenized Calculator.csproj", "{D12C47C5-05BE-4B84-9B4B-684DF8DA8AAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "Calculator\Calculator.csproj", "{CF589A98-27E9-4807-A97D-D476C3E0A733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.Tests", "Calculator.Tests\Calculator.Tests.csproj", "{CDCF3557-387B-4111-91D6-1B80299B1DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D12C47C5-05BE-4B84-9B4B-684DF8DA8AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D12C47C5-05BE-4B84-9B4B-684DF8DA8AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D12C47C5-05BE-4B84-9B4B-684DF8DA8AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF589A98-27E9-4807-A97D-D476C3E0A733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF589A98-27E9-4807-A97D-D476C3E0A733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF589A98-27E9-4807-A97D-D476C3E0A733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF589A98-27E9-4807-A97D-D476C3E0A733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCF3557-387B-4111-91D6-1B80299B1DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCF3557-387B-4111-91D6-1B80299B1DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCF3557-387B-4111-91D6-1B80299B1DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCF3557-387B-4111-91D6-1B80299B1DD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

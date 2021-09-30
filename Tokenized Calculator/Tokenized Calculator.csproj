@@ -4,6 +4,16 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Tokenized_Calculator</RootNamespace>
+	  
+    <Authors>Bradley Myers</Authors>
+    <Company>BLM16</Company>
+    <Copyright>Copyright © 2021 Bradley Myers. All rights reserved.</Copyright>
+    <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Calculator\Calculator.csproj" />
+  </ItemGroup>
 
 </Project>
