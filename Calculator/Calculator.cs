@@ -8,16 +8,17 @@ namespace Calculator
         /// <summary>
         /// The Lexer for tokenizing the equation
         /// </summary>
-        private Lexer _lexer;
+        private readonly Lexer _lexer;
 
         public Calculator()
         {
             _lexer = new Lexer();
         }
 
-        public static string Calculate(string equation)
+        public string Calculate(string equation)
         {
             equation = Standardizer.Standardize(equation);
+            var tokens = _lexer.Parse(equation);
 
             return "";
         }
