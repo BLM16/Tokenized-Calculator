@@ -1,26 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Calculator
+﻿namespace Calculator
 {
+    /// <summary>
+    /// Contains the required logic to evaluate an equation from a string
+    /// </summary>
     public class Calculator
     {
         /// <summary>
         /// The Lexer for tokenizing the equation
         /// </summary>
-        private readonly Lexer _lexer;
+        private readonly Lexer lexer;
+        /// <summary>
+        /// The Parser for evaluating the equation
+        /// </summary>
+        private readonly Parser parser;
 
         public Calculator()
         {
-            _lexer = new Lexer();
+            lexer = new Lexer();
+            parser = new Parser();
         }
 
-        public string Calculate(string equation)
+        /// <summary>
+        /// Runs the required steps to calculate a given equation
+        /// </summary>
+        /// <param name="equation">The equation to evaluate</param>
+        /// <returns>The result of evaluating the equation</returns>
+        public double Calculate(string equation)
         {
             equation = Standardizer.Standardize(equation);
-            var tokens = _lexer.Parse(equation);
+            var tokens = lexer.Parse(equation);
+            var result = parser.Evaluate(tokens);
 
-            return "";
+            return result;
         }
     }
 }

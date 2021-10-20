@@ -73,7 +73,6 @@ namespace Calculator
                     default:
                         // TODO: Handle non-builtins here
                         throw new MathSyntaxException($"Unexpected token: {c}");
-                        break;
                 }
             }
             

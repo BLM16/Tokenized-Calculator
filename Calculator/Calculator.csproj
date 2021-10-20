@@ -47,6 +47,7 @@
     <Compile Include="Calculator.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="MathSyntaxException.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Standardizer.cs" />
     <Compile Include="Token.cs" />

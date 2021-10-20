@@ -38,7 +38,7 @@ namespace Calculator.Tests
                 new Token(TokenType.RBRACK, ')')
             };
 
-            CollectionAssert.AreEqual(tokens, expected);
+            CollectionAssert.AreEqual(expected, tokens);
         }
 
         /// <summary>
@@ -46,7 +46,8 @@ namespace Calculator.Tests
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(MathSyntaxException))]
-        public void Parse_ExceptionOnUnrecognizedSymbols() => lexer.Parse("3&5.2");
+        public void Parse_ExceptionOnUnrecognizedSymbols()
+            => lexer.Parse("3&5.2");
 
         #endregion
     }
