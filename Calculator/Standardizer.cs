@@ -7,23 +7,31 @@ namespace Calculator
     /// <summary>
     /// Has the logic to standardize an equation into something the calculator can parse
     /// </summary>
-    internal static class Standardizer
+    internal class Standardizer
     {
+        /// <summary>
+        /// The list of operators that contribute to standardization
+        /// </summary>
+        private readonly Operator[] Operators;
+
+        public Standardizer(Operator[] operators)
+        {
+            Operators = operators;
+        }
+
         /// <summary>
         /// Standardizes an equation by inserting brackets and operators where needed
         /// </summary>
         /// <param name="equation">The equation to standardize</param>
         /// <returns>The provided equation that is completely standardized</returns>
-        public static string Standardize(string equation) => equation.RemoveWhitespace()
-                                                                     .FixBrackets()
-                                                                     .AddMultiplicationSigns();
+        public string Standardize(string equation) => AddMultiplicationSigns(FixBrackets(RemoveWhitespace(equation)));
 
         /// <summary>
         /// Removes all the whitespace characters in a string
         /// </summary>
         /// <param name="equation">The equation to remove whitespace from</param>
         /// <returns>The provided equation with removed whitespace</returns>
-        private static string RemoveWhitespace(this string equation)
+        private static string RemoveWhitespace(string equation)
         {
             // Matches all whitespace characters
             var whitespaceChars = new Regex(@"\s+");
@@ -35,7 +43,7 @@ namespace Calculator
         /// </summary>
         /// <param name="equation">The equation to fix the brackets in</param>
         /// <returns>The provided equation with the correct number of brackets</returns>
-        private static string FixBrackets(this string equation)
+        private static string FixBrackets(string equation)
         {
             int lBrack = 0, rBrack = 0;
 
@@ -68,16 +76,15 @@ namespace Calculator
         /// </summary>
         /// <param name="equation">The equation to fix the multiplication signs in</param>
         /// <returns>The provided equation with multiplication signs inserted at the right places</returns>
-        private static string AddMultiplicationSigns(this string equation)
+        private string AddMultiplicationSigns(string equation)
         {
             List<char> eq = new List<char>(equation);
-            // TODO: Migrate to a global list of operators later
-            var operators = "+-*/";
-            
+            var operators = string.Join("", from o in Operators select o.Symbol);
+
             for (var i = 1; i < eq.Count; i++)
             {
                 // Matches x( where x not in operators
-                if (eq[i] == '(' && !operators.Contains(eq[i - 1]) && eq[i-1] != '(')
+                if (eq[i] == '(' && !operators.Contains(eq[i - 1]) && eq[i - 1] != '(')
                 {
                     eq.Insert(i, '*');
                 }

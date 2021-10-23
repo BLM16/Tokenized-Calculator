@@ -9,6 +9,16 @@ namespace Calculator
     internal class Lexer
     {
         /// <summary>
+        /// The list of operators to parse
+        /// </summary>
+        private readonly Operator[] Operators;
+
+        public Lexer(Operator[] operators)
+        {
+            Operators = operators;
+        }
+
+        /// <summary>
         /// Tokenizes an equation
         /// </summary>
         /// <param name="equation">The equation to tokenize</param>
@@ -20,62 +30,46 @@ namespace Calculator
             // Loop through each char and convert to tokens
             foreach (char c in equation)
             {
-                switch (c)
+                if ("0123456789.".Contains(c))
                 {
-                    case '+':
-                        tokens.Add(new Token(TokenType.PLUS, c));
-                        break;
+                    var t = tokens.LastOrDefault();
+                    if (t == null || t.Type != TokenType.NUMBER)
+                    {
+                        tokens.Add(new Token(TokenType.NUMBER, c));
+                    }
+                    else
+                    {
+                        // The current and previous values are numbers so append the current to the previous
+                        t.Value = t.Value.ToString() + c;
+                    }
+                }
+                else if (c == '(')
+                {
+                    tokens.Add(new Token(TokenType.LBRACK, '('));
+                }
+                else if (c == ')')
+                {
+                    tokens.Add(new Token(TokenType.RBRACK, ')'));
+                }
+                else
+                {
+                    // Get the operator from the list of operators
+                    var op = from o in Operators
+                             where o.Symbol == c.ToString()
+                             select o;
 
-                    case '-':
-                        tokens.Add(new Token(TokenType.MINUS, c));
-                        break;
-
-                    case '*':
-                        tokens.Add(new Token(TokenType.MULT, c));
-                        break;
-
-                    case '/':
-                        tokens.Add(new Token(TokenType.DIV, c));
-                        break;
-
-                    case '(':
-                        tokens.Add(new Token(TokenType.LBRACK, c));
-                        break;
-
-                    case ')':
-                        tokens.Add(new Token(TokenType.RBRACK, c));
-                        break;
-
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                    case '0':
-                    case '.':
-                        // Append the current number value to the previous token if it is a number too
-                        // Create a new token otherwise
-                        var t = tokens.LastOrDefault();
-                        if (t == null || t.Type != TokenType.NUMBER)
-                        {
-                            tokens.Add(new Token(TokenType.NUMBER, c));
-                        }
-                        else
-                        {
-                            t.Value += c;
-                        }
-                        break;
-
-                    default:
-                        // TODO: Handle non-builtins here
-                        throw new MathSyntaxException($"Unexpected token: {c}");
+                    if (op.Any())
+                    {
+                        tokens.Add(new Token(TokenType.OPERATOR, op.First()));
+                    }
+                    else
+                    {
+                        // If the operator doesn't exist throw an error
+                        throw new MathSyntaxException($"Unrecognized operator: {c}");
+                    }
                 }
             }
-            
+
             return tokens;
         }
     }

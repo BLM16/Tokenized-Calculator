@@ -8,6 +8,8 @@ namespace Calculator.Tests
     [TestClass]
     public class StandardizerTests
     {
+        private readonly Standardizer standardizer = new Standardizer(Calculator.DefaultOperatorList);
+
         /// <summary>
         /// Checks that whitespace is correctly removed from the equations
         /// </summary>
@@ -18,7 +20,7 @@ namespace Calculator.Tests
         [DataRow("(267 + 35) * 34 /2 + 2", "(267+35)*34/2+2")]
         [DataRow("(12 +7)*(19 - 4) + 6*(7 / 4)", "(12+7)*(19-4)+6*(7/4)")]
         public void RemoveWhitespace_RemovesSpaces(string equation, string expected)
-            => Assert.AreEqual(expected, Standardizer.Standardize(equation));
+            => Assert.AreEqual(expected, standardizer.Standardize(equation));
 
         #region FixBrackets.Tests
 
@@ -32,7 +34,7 @@ namespace Calculator.Tests
         [DataRow("(63+7)*3*(35+(35-2", "(63+7)*3*(35+(35-2))")]
         [DataRow("(((35", "(((35)))")]
         public void FixBrackets_FixesBrackets(string equation, string expected)
-            => Assert.AreEqual(expected, Standardizer.Standardize(equation));
+            => Assert.AreEqual(expected, standardizer.Standardize(equation));
 
         /// <summary>
         /// Checks that an exception is thrown with too many closing brackets
@@ -43,7 +45,7 @@ namespace Calculator.Tests
         [DataRow("37*(16*(14+13/2)))")]
         [ExpectedException(typeof(MathSyntaxException))]
         public void FixBrackets_ExceptionOnTooManyClosingBrackets(string equation)
-            => Standardizer.Standardize(equation);
+            => standardizer.Standardize(equation);
 
         #endregion
 
@@ -55,8 +57,9 @@ namespace Calculator.Tests
         [DataTestMethod]
         [DataRow("35(14+2)", "35*(14+2)")]
         [DataRow("(14+2)35", "(14+2)*35")]
-        [DataRow("(14/2)(13+9)", "(14/2)*(13+9)")]
+        [DataRow("-(14/2)(13+9)", "-(14/2)*(13+9)")]
+        [DataRow("123+(5*7)/2", "123+(5*7)/2")]
         public void AddMultiplicationSigns_AddsMultiplicationSigns(string equation, string expected)
-            => Assert.AreEqual(expected, Standardizer.Standardize(equation));
+            => Assert.AreEqual(expected, standardizer.Standardize(equation));
     }
 }

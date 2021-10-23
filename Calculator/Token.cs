@@ -8,10 +8,7 @@ namespace Calculator
     public enum TokenType : ushort
     {
         NUMBER,
-        PLUS,
-        MINUS,
-        MULT,
-        DIV,
+        OPERATOR,
         LBRACK,
         RBRACK
     }
@@ -28,28 +25,25 @@ namespace Calculator
         /// <summary>
         /// The value of the token
         /// </summary>
-        public string Value;
+        public object Value;
 
-        public Token(TokenType type, string value)
+        public Token(TokenType type, object value)
         {
             Type = type;
             Value = value;
         }
 
-        public Token(TokenType type, char value) : this(type, value.ToString())
-        { }
-
         #region Overrides
 
-        public override bool Equals(object obj) => obj is Token token
-                                                   && Type == token.Type
-                                                   && Value == token.Value;
+        public override bool Equals(object obj) => obj is Token @token
+                                                   && Type == @token.Type
+                                                   && Value.Equals(@token.Value);
 
         public override int GetHashCode()
         {
             int hashCode = 1265339359;
             hashCode = hashCode * -1521134295 + Type.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+            hashCode = hashCode * -1521134295 + EqualityComparer<object>.Default.GetHashCode(Value);
             return hashCode;
         }
 

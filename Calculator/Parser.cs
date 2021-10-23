@@ -14,7 +14,15 @@ namespace Calculator
         /// <summary>
         /// The stack of operators that need to be applied to the values
         /// </summary>
-        private readonly Stack<string> operators = new Stack<string>();
+        private readonly Stack<Operator> operators = new Stack<Operator>();
+
+        /// <summary>
+        /// The default left bracket operator.
+        /// This is only to be used as reference by the parser and should never be evaluated.
+        /// The order of precedence is 0 so all operators are pushed after it instead of evaluated.
+        /// </summary>
+        private static Operator LeftBracket
+            => new Operator("(", 0, (double num1, double num2) => { return double.NaN; });
 
         /// <summary>
         /// Evaluates the result of a tokenized mathematical equation
@@ -30,54 +38,51 @@ namespace Calculator
                 switch (t.Type)
                 {
                     case TokenType.NUMBER:
-                        values.Push(double.Parse(t.Value));
+                        values.Push(double.Parse(t.Value.ToString()));
                         break;
 
-                    case TokenType.PLUS:
-                    case TokenType.MINUS:
-                    case TokenType.MULT:
-                    case TokenType.DIV:
+                    case TokenType.OPERATOR:
                         // Push the operator to the stack if there are no operators as precedence cannot be determined
                         if (operators.Count == 0)
                         {
-                            operators.Push(t.Value);
+                            operators.Push(t.Value as Operator);
                         }
                         // Push the operator to the stack if the previous operator has a lower precedence
-                        else if("+-(".Contains(operators.Peek()))
+                        else if (t.Value as Operator > operators.Peek())
                         {
-                            operators.Push(t.Value);
+                            operators.Push(t.Value as Operator);
                         }
                         else
                         {
-                            // Continuously evaluate the equation until precedence is lost
-                            while (operators.Count > 0 && !"+-(".Contains(operators.Peek()))
+                            // Continuously evaluate the equation from the stacks while it has precedence
+                            while (operators.Count > 0 && !(t.Value as Operator > operators.Peek()))
                             {
                                 var a = values.Pop();
                                 var b = values.Pop();
                                 var o = operators.Pop();
 
-                                values.Push(Calculate(a, b, o));
+                                values.Push(o.Evaluate(b, a));
                             }
                             // Push the current operator to the stack
-                            operators.Push(t.Value);
+                            operators.Push(t.Value as Operator);
                         }
                         break;
 
                     case TokenType.LBRACK:
                         // This token is simply pushed as it only provides an endpoint to RBRACK tokens
-                        operators.Push(t.Value);
+                        operators.Push(LeftBracket);
                         break;
 
                     case TokenType.RBRACK:
                         // Evaluate all the math inside the brackets
                         // Previous precedence operations will ensure this will always follow bedmas
-                        while (operators.Peek() != "(")
+                        while (operators.Peek().Symbol != "(")
                         {
                             var a = values.Pop();
                             var b = values.Pop();
                             var o = operators.Pop();
 
-                            values.Push(Calculate(a, b, o));
+                            values.Push(o.Evaluate(b, a));
                         }
 
                         operators.Pop(); // Pop the reference LBRACK
@@ -92,40 +97,10 @@ namespace Calculator
                 var b = values.Pop();
                 var o = operators.Pop();
 
-                values.Push(Calculate(a, b, o));
+                values.Push(o.Evaluate(b, a));
             }
 
             return values.Pop();
-        }
-
-        /// <summary>
-        /// Calculates the result from given two values and an operator.
-        /// This method assumes <c>a</c> and <c>b</c> are from a LIFO stack.
-        /// For direction specific calculations, <c>b</c> is left of the operator.
-        /// </summary>
-        /// <param name="a">The first number</param>
-        /// <param name="b">The second number</param>
-        /// <param name="op">The operator</param>
-        /// <returns>The result of applying the operator to a and b</returns>
-        private double Calculate(double a, double b, string op)
-        {
-            switch (op)
-            {
-                case "+":
-                    return a + b;
-
-                case "-":
-                    return b - a; // Inverse because stack is LIFO
-
-                case "*":
-                    return a * b;
-
-                case "/":
-                    return b / a; // Inverse because stack is LIFO
-
-                default:
-                    throw new MathSyntaxException($"Operator '{op}' is not defined");
-            }
         }
     }
 }

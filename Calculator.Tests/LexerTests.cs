@@ -9,7 +9,7 @@ namespace Calculator.Tests
     [TestClass]
     public class LexerTests
     {
-        private readonly Lexer lexer = new Lexer();
+        private readonly Lexer lexer = new Lexer(Calculator.DefaultOperatorList);
 
         #region Parse.Tests
 
@@ -19,21 +19,23 @@ namespace Calculator.Tests
         [TestMethod]
         public void Parse_ParsesEquation()
         {
-            var tokens = lexer.Parse("5.14*(3.7+2)/(5-3)");
+            var tokens = lexer.Parse("5.14*(3.7+2^2)/(5-3)");
 
             var expected = new List<Token>()
             {
                 new Token(TokenType.NUMBER, "5.14"),
-                new Token(TokenType.MULT, '*'),
+                new Token(TokenType.OPERATOR, DefaultOperators.Multiplication),
                 new Token(TokenType.LBRACK, '('),
                 new Token(TokenType.NUMBER, "3.7"),
-                new Token(TokenType.PLUS, '+'),
+                new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                new Token(TokenType.NUMBER, '2'),
+                new Token(TokenType.OPERATOR, DefaultOperators.Exponent),
                 new Token(TokenType.NUMBER, '2'),
                 new Token(TokenType.RBRACK, ')'),
-                new Token(TokenType.DIV, '/'),
+                new Token(TokenType.OPERATOR, DefaultOperators.Division),
                 new Token(TokenType.LBRACK, '('),
                 new Token(TokenType.NUMBER, '5'),
-                new Token(TokenType.MINUS, '-'),
+                new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
                 new Token(TokenType.NUMBER, '3'),
                 new Token(TokenType.RBRACK, ')')
             };
