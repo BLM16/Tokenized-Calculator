@@ -10,6 +10,9 @@
     <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl />
+    <Version>2.0.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>calculator</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +27,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Calculator\Calculator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
