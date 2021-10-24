@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Calculator\Calculator.csproj" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
