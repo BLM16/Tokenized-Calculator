@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
 
     <Authors>Bradley Myers</Authors>
@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Calculator\Calculator.csproj" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>

@@ -1,4 +1,6 @@
-﻿namespace Calculator
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Calculator.Tests")]
+
+namespace Calculator
 {
     /// <summary>
     /// Contains the required logic to evaluate an equation from a string
