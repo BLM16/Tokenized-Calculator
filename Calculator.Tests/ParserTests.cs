@@ -128,6 +128,21 @@ namespace Calculator.Tests
                     },
                     320d
                 };
+
+                yield return new object[]
+                {
+                    new List<Token>()
+                    {
+                        new Token(TokenType.NUMBER, '2'),
+                        new Token(TokenType.OPERATOR, DefaultOperators.Exponent),
+                        new Token(TokenType.LBRACK, '('),
+                        new Token(TokenType.NUMBER, '3'),
+                        new Token(TokenType.OPERATOR, DefaultOperators.Exponent),
+                        new Token(TokenType.NUMBER, '2'),
+                        new Token(TokenType.RBRACK, ')')
+                    },
+                    512d
+                };
             }
         }
     }
