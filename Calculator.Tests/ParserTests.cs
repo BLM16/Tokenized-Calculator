@@ -9,7 +9,7 @@ namespace Calculator.Tests
     [TestClass]
     public class ParserTests
     {
-        private readonly Parser parser = new Parser();
+        private readonly Parser parser = new();
 
         /// <summary>
         /// Checks that tokenized equations are evaluated correctly

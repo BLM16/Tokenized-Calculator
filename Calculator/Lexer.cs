@@ -28,19 +28,40 @@ namespace Calculator
             var tokens = new List<Token>();
 
             // Loop through each char and convert to tokens
-            foreach (char c in equation)
+            for (int i = 0; i < equation.Length; i++)
             {
+                var c = equation[i];
+                var isLast = i + 1 == equation.Length;
+
                 if ("0123456789.".Contains(c))
                 {
                     var t = tokens.LastOrDefault();
                     if (t == null || t.Type != TokenType.NUMBER)
                     {
-                        tokens.Add(new Token(TokenType.NUMBER, c));
+                        // Prepend a zero if the number starts with a decimal point
+                        object value = c == '.' ? $"0{c}" : c;
+                        if (c == '.' && (isLast || !"0123456789".Contains(equation[i + 1])))
+                        {
+                            throw new MathSyntaxException("Malformed double: digits must trail the decimal point");
+                        }
+                        tokens.Add(new Token(TokenType.NUMBER, value));
                     }
                     else
                     {
-                        // The current and previous values are numbers so append the current to the previous
-                        t.Value = t.Value.ToString() + c;
+                        var cur = t.Value.ToString();
+                        if (c == '.' && cur.Contains('.'))
+                        {
+                            throw new MathSyntaxException($"Malformed double: cannot contain more than one decimal point");
+                        }
+                        else if (c == '.' && (isLast || !"0123456789".Contains(equation[i + 1])))
+                        {
+                            throw new MathSyntaxException("Malformed double: digits must trail the decimal point");
+                        }
+                        else
+                        {
+                            // The current and previous values are numbers so append the current to the previous
+                            t.Value = cur + c;
+                        }
                     }
                 }
                 else if (c == '(')
@@ -53,9 +74,14 @@ namespace Calculator
                 }
                 else
                 {
+                    if (tokens.LastOrDefault().Type == TokenType.OPERATOR)
+                    {
+                        throw new MathSyntaxException("Consecutive operators found");
+                    }
+                    
                     // Get the operator from the list of operators
                     var op = from o in Operators
-                             where o.Symbol == c.ToString()
+                             where o.Symbol == c
                              select o;
 
                     if (op.Any())

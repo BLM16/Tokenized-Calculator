@@ -10,11 +10,11 @@ namespace Calculator
         /// <summary>
         /// The stack of values that still need to be evaluated
         /// </summary>
-        private readonly Stack<double> values = new Stack<double>();
+        private readonly Stack<double> values = new();
         /// <summary>
         /// The stack of operators that need to be applied to the values
         /// </summary>
-        private readonly Stack<Operator> operators = new Stack<Operator>();
+        private readonly Stack<Operator> operators = new();
 
         /// <summary>
         /// The default left bracket operator.
@@ -22,7 +22,7 @@ namespace Calculator
         /// The order of precedence is 0 so all operators are pushed after it instead of evaluated.
         /// </summary>
         private static Operator LeftBracket
-            => new Operator("(", 0, (double num1, double num2) => { return double.NaN; });
+            => new('(', 0, (double num1, double num2) => { return double.NaN; });
 
         /// <summary>
         /// Evaluates the result of a tokenized mathematical equation
@@ -76,7 +76,7 @@ namespace Calculator
                     case TokenType.RBRACK:
                         // Evaluate all the math inside the brackets
                         // Previous precedence operations will ensure this will always follow bedmas
-                        while (operators.Peek().Symbol != "(")
+                        while (operators.Peek().Symbol != '(')
                         {
                             var a = values.Pop();
                             var b = values.Pop();

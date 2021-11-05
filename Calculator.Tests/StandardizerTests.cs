@@ -8,7 +8,7 @@ namespace Calculator.Tests
     [TestClass]
     public class StandardizerTests
     {
-        private readonly Standardizer standardizer = new Standardizer(Calculator.DefaultOperatorList);
+        private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList);
 
         /// <summary>
         /// Checks that whitespace is correctly removed from the equations

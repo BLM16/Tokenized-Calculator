@@ -9,7 +9,7 @@ namespace Calculator.Tests
     [TestClass]
     public class LexerTests
     {
-        private readonly Lexer lexer = new Lexer(Calculator.DefaultOperatorList);
+        private readonly Lexer lexer = new(Calculator.DefaultOperatorList);
 
         #region Parse.Tests
 
@@ -44,12 +44,56 @@ namespace Calculator.Tests
         }
 
         /// <summary>
+        /// Checks that a zero is prepended before doubles with no value before the decimal point
+        /// </summary>
+        [TestMethod]
+        public void Parse_PrependZerosBeforeDoubles()
+        {
+            var tokens = lexer.Parse(".305+.307*.302");
+
+            var expected = new List<Token>()
+            {
+                new Token(TokenType.NUMBER, "0.305"),
+                new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                new Token(TokenType.NUMBER, "0.307"),
+                new Token(TokenType.OPERATOR, DefaultOperators.Multiplication),
+                new Token(TokenType.NUMBER, "0.302")
+
+            };
+
+            CollectionAssert.AreEqual(expected, tokens);
+        }
+
+        /// <summary>
         /// Checks that an exception is thrown when lexing an uncrecognized symbol
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(MathSyntaxException))]
         public void Parse_ExceptionOnUnrecognizedSymbols()
             => lexer.Parse("3&5.2");
+
+        /// <summary>
+        /// Checks that exceptions are thrown when malformed doubles are encountered
+        /// </summary>
+        /// <param name="equation">The equation of malformed doubles to test</param>
+        [DataTestMethod]
+        [ExpectedException(typeof(MathSyntaxException))]
+        [DataRow("3.157.92+36.4*3")]
+        [DataRow("126.*14+3")]
+        [DataRow("2+13.")]
+        public void Parse_ExceptionOnMalformedDoubles(string equation)
+            => lexer.Parse(equation);
+
+        /// <summary>
+        /// Checks that exceptions are thrown when consecutive operators are encountered
+        /// </summary>
+        /// <param name="equation">The equation of consecutive operators to test</param>
+        [DataTestMethod]
+        [ExpectedException(typeof(MathSyntaxException))]
+        [DataRow("157+*3.2/6")]
+        [DataRow("134+-8")]
+        public void Parse_ExceptionOnConsecutiveOperators(string equation)
+            => lexer.Parse(equation);
 
         #endregion
     }

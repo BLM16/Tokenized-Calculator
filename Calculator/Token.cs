@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Calculator
 {
@@ -39,13 +39,7 @@ namespace Calculator
                                                    && Type == @token.Type
                                                    && Value.Equals(@token.Value);
 
-        public override int GetHashCode()
-        {
-            int hashCode = 1265339359;
-            hashCode = hashCode * -1521134295 + Type.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<object>.Default.GetHashCode(Value);
-            return hashCode;
-        }
+        public override int GetHashCode() => HashCode.Combine(Type, Value);
 
         #endregion
     }

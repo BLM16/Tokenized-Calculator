@@ -11,7 +11,7 @@ namespace Calculator
         /// <summary>
         /// The symbol representing the operator
         /// </summary>
-        public string Symbol { get; private set; }
+        public char Symbol { get; private set; }
         /// <summary>
         /// The order of precedence of the operator
         /// </summary>
@@ -21,7 +21,7 @@ namespace Calculator
         /// </summary>
         private Delegate Operation { get; set; }
 
-        public Operator(string op, int order, Func<double, double, double> operation)
+        public Operator(char op, int order, Func<double, double, double> operation)
         {
             Symbol = op;
             Order = order;
@@ -52,14 +52,7 @@ namespace Calculator
                                                    && Order == @operator.Order
                                                    && EqualityComparer<Delegate>.Default.Equals(Operation, @operator.Operation);
 
-        public override int GetHashCode()
-        {
-            int hashCode = 1111340351;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Symbol);
-            hashCode = hashCode * -1521134295 + Order.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Delegate>.Default.GetHashCode(Operation);
-            return hashCode;
-        }
+        public override int GetHashCode() => HashCode.Combine(Symbol, Order, Operation);
 
         #endregion
     }
@@ -73,30 +66,30 @@ namespace Calculator
         /// The default addition operator
         /// </summary>
         public static Operator Addition
-            => new Operator("+", 1, (double num1, double num2) => num1 + num2);
+            => new('+', 1, (double num1, double num2) => num1 + num2);
 
         /// <summary>
         /// The default subtraction operator
         /// </summary>
         public static Operator Subtraction
-            => new Operator("-", 1, (double num1, double num2) => num1 - num2);
+            => new('-', 1, (double num1, double num2) => num1 - num2);
 
         /// <summary>
         /// The default multiplication operator
         /// </summary>
         public static Operator Multiplication
-            => new Operator("*", 2, (double num1, double num2) => num1 * num2);
+            => new('*', 2, (double num1, double num2) => num1 * num2);
 
         /// <summary>
         /// The default division operator
         /// </summary>
         public static Operator Division
-            => new Operator("/", 2, (double num1, double num2) => num1 / num2);
+            => new('/', 2, (double num1, double num2) => num1 / num2);
 
         /// <summary>
         /// The default exponent operator
         /// </summary>
         public static Operator Exponent
-            => new Operator("^", 3, (double num1, double exponent) => Math.Pow(num1, exponent));
+            => new('^', 3, (double num1, double exponent) => Math.Pow(num1, exponent));
     }
 }

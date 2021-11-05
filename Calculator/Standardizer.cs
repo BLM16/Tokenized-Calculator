@@ -78,7 +78,7 @@ namespace Calculator
         /// <returns>The provided equation with multiplication signs inserted at the right places</returns>
         private string AddMultiplicationSigns(string equation)
         {
-            List<char> eq = new List<char>(equation);
+            var eq = new List<char>(equation);
             var operators = string.Join("", from o in Operators select o.Symbol);
 
             for (var i = 1; i < eq.Count; i++)
