@@ -24,12 +24,14 @@ public class Calculator
     /// </summary>
     private readonly Operator[] operators;
 
-    public Calculator()
+    /// <param name="operators">The list of operators the calculator recognizes. Defaults to <see cref="DefaultOperatorList"/> if no value is provided.</param>
+    public Calculator(Operator[] operators = null)
     {
-        operators = DefaultOperatorList;
+        // Use the default operators if no operators are provided
+        this.operators = operators ?? DefaultOperatorList;
 
-        standardizer = new Standardizer(operators);
-        lexer = new Lexer(operators);
+        standardizer = new Standardizer(this.operators);
+        lexer = new Lexer(this.operators);
         parser = new Parser();
     }
 
