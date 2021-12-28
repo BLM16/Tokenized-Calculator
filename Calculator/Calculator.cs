@@ -1,5 +1,5 @@
 ﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Calculator.Tests")]
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Contains the required logic to evaluate an equation from a string

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Has the logic to evaluate an equation

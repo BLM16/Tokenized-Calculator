@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace Calculator.Tests;
+namespace BLM16.Util.Calculator.Tests;
 
 /// <summary>
 /// Contains the tests for the Parser class

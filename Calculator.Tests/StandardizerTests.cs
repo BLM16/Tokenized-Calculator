@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Calculator.Tests;
+namespace BLM16.Util.Calculator.Tests;
 
 /// <summary>
 /// Contains the tests for the Standardizer class

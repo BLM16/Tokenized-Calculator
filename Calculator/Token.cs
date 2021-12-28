@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Builtin token types

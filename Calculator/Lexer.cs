@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Has the logic to tokenize an equation

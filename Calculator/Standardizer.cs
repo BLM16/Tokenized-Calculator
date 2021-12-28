@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Has the logic to standardize an equation into something the calculator can parse

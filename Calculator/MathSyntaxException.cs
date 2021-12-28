@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Calculator;
+namespace BLM16.Util.Calculator;
 
 /// <summary>
 /// Exception for malformed equations

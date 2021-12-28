@@ -1,28 +1,20 @@
 ﻿using System;
-using Calculator;
+using BLM16.Util.Calculator;
 
-namespace Examples;
-
-class ConsoleIO
+while (true)
 {
-    static void Main(string[] args)
+    try
     {
-        while (true)
-        {
-            try
-            {
-                Console.Write("Enter your equation: ");
-                var eq = Console.ReadLine();
-            
-                var calculator = new Calculator.Calculator();
-                var res = calculator.Calculate(eq);
+        Console.Write("Enter your equation: ");
+        var eq = Console.ReadLine();
 
-                Console.WriteLine($"Result: {res}\n");
-            }
-            catch (MathSyntaxException e)
-            {
-                Console.WriteLine(e + "\n");
-            }
-        }
+        var calculator = new Calculator();
+        var res = calculator.Calculate(eq);
+
+        Console.WriteLine($"Result: {res}\n");
+    }
+    catch (MathSyntaxException e)
+    {
+        Console.WriteLine(e + "\n");
     }
 }
