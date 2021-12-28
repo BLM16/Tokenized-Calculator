@@ -39,6 +39,7 @@ public class Calculator
     /// Runs the required steps to calculate a given equation
     /// </summary>
     /// <param name="equation">The equation to evaluate</param>
+    /// <exception cref="MathSyntaxException">Thrown when malformed math is provided or unrecognized operators or tokens are found.</exception>
     /// <returns>The result of evaluating the equation</returns>
     public double Calculate(string equation)
     {

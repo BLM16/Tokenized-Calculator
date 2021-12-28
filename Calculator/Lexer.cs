@@ -22,6 +22,7 @@ internal class Lexer
     /// Tokenizes an equation
     /// </summary>
     /// <param name="equation">The equation to tokenize</param>
+    /// <exception cref="MathSyntaxException">Thrown when malformed math is provided or an operator is unrecognized.</exception>
     /// <returns>A list of tokens</returns>
     public List<Token> Parse(string equation)
     {
@@ -74,6 +75,10 @@ internal class Lexer
             }
             else
             {
+                if (equation.Length == 1)
+                {
+                    throw new MathSyntaxException("Malformed expression: operator requires numbers to operate on");
+                }
                 if (tokens.LastOrDefault().Type == TokenType.OPERATOR)
                 {
                     throw new MathSyntaxException("Consecutive operators found");

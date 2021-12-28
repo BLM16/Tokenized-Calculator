@@ -39,6 +39,7 @@ internal class Standardizer
     /// Fixes the equation by ensuring there are equal number of brackets
     /// </summary>
     /// <param name="equation">The equation to fix the brackets in</param>
+    /// <exception cref="MathSyntaxException">Thrown when there are more closing brackets than opening ones.</exception>
     /// <returns>The provided equation with the correct number of brackets</returns>
     private static string FixBrackets(string equation)
     {
