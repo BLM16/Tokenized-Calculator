@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BLM16.Util.Calculator;
+namespace BLM16.Util.Calculator.Models;
 
 /// <summary>
 /// An operator used by the calculator

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BLM16.Util.Calculator.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -13,15 +15,26 @@ internal class Standardizer
     /// The list of operators that contribute to standardization
     /// </summary>
     private readonly Operator[] Operators;
+    /// <summary>
+    /// The dictionary that maps constant symbols to their values
+    /// </summary>
+    private readonly Dictionary<string, double> Constants = new();
 
-    public Standardizer(Operator[] operators) => Operators = operators;
+    public Standardizer(Operator[] operators, Constant[] constants)
+    {
+        Operators = operators;
+
+        // Map each of the Constant's symbols to the Constant's value
+        Array.ForEach(constants, c =>
+            Array.ForEach(c.Symbols, s => Constants.Add(s, c.Value)));
+    }
 
     /// <summary>
     /// Standardizes an equation by inserting brackets and operators where needed
     /// </summary>
     /// <param name="equation">The equation to standardize</param>
     /// <returns>The provided equation that is completely standardized</returns>
-    public string Standardize(string equation) => AddMultiplicationSigns(FixBrackets(RemoveWhitespace(equation)));
+    public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(FixBrackets(RemoveWhitespace(equation))));
 
     /// <summary>
     /// Removes all the whitespace characters in a string
@@ -65,6 +78,21 @@ internal class Standardizer
                 equation += ")";
             }
         }
+
+        return equation;
+    }
+
+    /// <summary>
+    /// Replaces the constants in an equation with their values
+    /// </summary>
+    /// <param name="equation">The equation to replace constants in</param>
+    /// <returns>The provided equation where the constants have been replaced</returns>
+    private string ReplaceConstants(string equation)
+    {
+        // Order the dictionary by key length, replace all the keys in the equation with the values
+        Constants.OrderByDescending(e => e.Key.Length)
+                 .ToList()
+                 .ForEach(e => equation = equation.Replace(e.Key.ToLower(), $"({e.Value})"));
 
         return equation;
     }

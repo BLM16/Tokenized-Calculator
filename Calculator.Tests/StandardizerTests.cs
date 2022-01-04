@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BLM16.Util.Calculator.Tests;
 
@@ -8,7 +8,7 @@ namespace BLM16.Util.Calculator.Tests;
 [TestClass]
 public class StandardizerTests
 {
-    private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList);
+    private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList, Calculator.DefaultConstantList);
 
     /// <summary>
     /// Checks that whitespace is correctly removed from the equations
@@ -48,6 +48,13 @@ public class StandardizerTests
         => standardizer.Standardize(equation);
 
     #endregion
+
+    [DataTestMethod]
+    [DataRow("pi", "(3.141592653589793)")]
+    [DataRow("e", "(2.718281828459045)")]
+    [DataRow("eπ(13+2^e)/pi", "(2.718281828459045)*(3.141592653589793)*(13+2^(2.718281828459045))/(3.141592653589793)")]
+    public void ReplaceConstants_ReplacesConstants(string equation, string expected)
+        => Assert.AreEqual(expected, standardizer.Standardize(equation));
 
     /// <summary>
     /// Checks that multiplication signs are inserted correctly around brackets

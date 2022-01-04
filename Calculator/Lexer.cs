@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BLM16.Util.Calculator.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BLM16.Util.Calculator;
@@ -37,7 +38,7 @@ internal class Lexer
             if ("0123456789.".Contains(c))
             {
                 var t = tokens.LastOrDefault();
-                if (t == null || t.Type != TokenType.NUMBER)
+                if (tokens.Count == 0 || t.Type != TokenType.NUMBER)
                 {
                     // Prepend a zero if the number starts with a decimal point
                     object value = c == '.' ? $"0{c}" : c;
@@ -61,7 +62,7 @@ internal class Lexer
                     else
                     {
                         // The current and previous values are numbers so append the current to the previous
-                        t.Value = cur + c;
+                        tokens[^1] = t with { Value = cur + c };
                     }
                 }
             }

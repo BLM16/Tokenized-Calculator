@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BLM16.Util.Calculator;
+namespace BLM16.Util.Calculator.Models;
 
 /// <summary>
 /// Builtin token types
@@ -16,7 +16,7 @@ public enum TokenType : ushort
 /// <summary>
 /// Represents a mathematical symbol or number with a type and value
 /// </summary>
-public class Token
+public struct Token
 {
     /// <summary>
     /// The type of token
@@ -40,6 +40,16 @@ public class Token
                                                 && Value.Equals(@token.Value);
 
     public override int GetHashCode() => HashCode.Combine(Type, Value);
+
+    public static bool operator ==(Token left, Token right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Token left, Token right)
+    {
+        return !(left == right);
+    }
 
     #endregion
 }

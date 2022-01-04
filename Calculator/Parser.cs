@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BLM16.Util.Calculator.Models;
+using System.Collections.Generic;
 
 namespace BLM16.Util.Calculator;
 
