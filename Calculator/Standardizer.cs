@@ -12,21 +12,23 @@ namespace BLM16.Util.Calculator;
 internal class Standardizer
 {
     /// <summary>
-    /// The list of operators that contribute to standardization
+    /// The list of operators recognized by the calculator
     /// </summary>
     private readonly Operator[] Operators;
     /// <summary>
-    /// The dictionary that maps constant symbols to their values
+    /// The list of constants recognized by the calculator
     /// </summary>
-    private readonly Dictionary<string, double> Constants = new();
+    private readonly Constant[] Constants;
+    /// <summary>
+    /// The list of functions recognized by the calculator
+    /// </summary>
+    private readonly Function[] Functions;
 
-    public Standardizer(Operator[] operators, Constant[] constants)
+    public Standardizer(Operator[] operators, Constant[] constants, Function[] functions)
     {
         Operators = operators;
-
-        // Map each of the Constant's symbols to the Constant's value
-        Array.ForEach(constants, c =>
-            Array.ForEach(c.Symbols, s => Constants.Add(s, c.Value)));
+        Constants = constants;
+        Functions = functions;
     }
 
     /// <summary>
@@ -34,7 +36,7 @@ internal class Standardizer
     /// </summary>
     /// <param name="equation">The equation to standardize</param>
     /// <returns>The provided equation that is completely standardized</returns>
-    public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(FixBrackets(RemoveWhitespace(equation))));
+    public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(ComputeFunctions(FixBrackets(RemoveWhitespace(equation)))));
 
     /// <summary>
     /// Removes all the whitespace characters in a string
@@ -83,14 +85,86 @@ internal class Standardizer
     }
 
     /// <summary>
+    /// Replaces the functions in an equation with their results
+    /// </summary>
+    /// <param name="equation">The equation to solve functions in</param>
+    /// <returns>The provided equation with computed functions</returns>
+    /// <exception cref="MathSyntaxException">Thrown if incorrect function syntax is found</exception>
+    private string ComputeFunctions(string equation)
+    {
+        // Maps function's symbols to their operation
+        var funcsDict = new Dictionary<string, Func<double, string>>();
+        Array.ForEach(Functions, f =>
+            Array.ForEach(f.Symbols, s => funcsDict.Add(s, f.Operation)));
+
+        // Order the dictionary by key length
+        List<KeyValuePair<string, Func<double, string>>> functions = funcsDict.OrderByDescending(e => e.Key.Length).ToList();
+
+        foreach (var f in functions)
+        {
+            // Loop through all occurences of the function name in the equation
+            while (equation.IndexOf(f.Key) != -1)
+            {
+                // Find the start index of the function
+                var startIndex = equation.IndexOf(f.Key);
+                if (startIndex + f.Key.Length >= equation.Length || equation[startIndex + f.Key.Length] != '(')
+                {
+                    // Function identifier isn't followed by (
+                    throw new MathSyntaxException("Function identifier not followed by parentheses: " + f.Key + "?");
+                }
+
+                // Find the end index of the function keeping in mind nested parentheses are allowed
+                int endIndex = 0, lBrack = 0;
+                for (int i = startIndex + f.Key.Length + 1; i < equation.Length; i++)
+                {
+                    if (equation[i] == ')')
+                    {
+                        if (lBrack == 0)
+                        {
+                            endIndex = i;
+                            break;
+                        }
+                        else
+                        {
+                            lBrack--;
+                        }
+                    }
+                    else if (equation[i] == '(')
+                    {
+                        lBrack++;
+                    }
+                }
+
+                // Create a new calculator with the same operators, constants, and functions to recursively evalutate the function's contents
+                var calc = new Calculator(Operators, Constants, Functions);
+
+                // Get the value captured by the function
+                var sub = equation[(startIndex + f.Key.Length + 1)..endIndex];
+                // Compute the function
+                var result = f.Value(calc.Calculate(sub));
+
+                // Replace the function with its value in the equation
+                equation = equation.Replace(f.Key + '(' + sub + ')', $"({result})");
+            }
+        }
+
+        return equation;
+    }
+
+    /// <summary>
     /// Replaces the constants in an equation with their values
     /// </summary>
     /// <param name="equation">The equation to replace constants in</param>
     /// <returns>The provided equation where the constants have been replaced</returns>
     private string ReplaceConstants(string equation)
     {
+        // Maps the constant's symbols to its value
+        var constants = new Dictionary<string, double>();
+        Array.ForEach(Constants, c =>
+            Array.ForEach(c.Symbols, s => constants.Add(s, c.Value)));
+
         // Order the dictionary by key length, replace all the keys in the equation with the values
-        Constants.OrderByDescending(e => e.Key.Length)
+        constants.OrderByDescending(e => e.Key.Length)
                  .ToList()
                  .ForEach(e => equation = equation.Replace(e.Key.ToLower(), $"({e.Value})"));
 

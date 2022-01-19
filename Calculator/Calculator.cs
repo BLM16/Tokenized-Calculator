@@ -29,16 +29,24 @@ public class Calculator
     /// The constants the calculator can use
     /// </summary>
     private readonly Constant[] constants;
+    /// <summary>
+    /// The functions the calculator can use
+    /// </summary>
+    private readonly Function[] functions;
 
     /// <param name="operators">The list of operators the calculator recognizes. Defaults to <see cref="DefaultOperatorList"/> if no value is provided.</param>
-    public Calculator(Operator[] operators = null, Constant[] constants = null)
+    /// <param name="constants">The list of constants the calculator recognizes. Defaults to <see cref="DefaultConstantList"/> if no value is provided.</param>
+    /// <param name="functions">The list of functions the calculator recognizes. Defaults to <see cref="DefaultFunctionList"/> if no value is provided.</param>
+    public Calculator(Operator[] operators = null, Constant[] constants = null, Function[] functions = null)
     {
         // Use the default operators if no operators are provided
         this.operators = operators ?? DefaultOperatorList;
         // Use the default constants if no constants are provided
         this.constants = constants ?? DefaultConstantList;
+        // Use the default functions if no functions are provided
+        this.functions = functions ?? DefaultFunctionList;
 
-        standardizer = new Standardizer(this.operators, this.constants);
+        standardizer = new Standardizer(this.operators, this.constants, this.functions);
         lexer = new Lexer(this.operators);
         parser = new Parser();
     }
@@ -79,5 +87,28 @@ public class Calculator
     {
         DefaultConstants.PI,
         DefaultConstants.E
+    };
+
+    /// <summary>
+    /// A list of the default functions used by the calculator
+    /// </summary>
+    public static Function[] DefaultFunctionList => new Function[]
+    {
+        DefaultFunctions.Sqrt,
+        DefaultFunctions.Cbrt,
+        DefaultFunctions.Cos,
+        DefaultFunctions.Sin,
+        DefaultFunctions.Tan,
+        DefaultFunctions.Asin,
+        DefaultFunctions.Acos,
+        DefaultFunctions.Atan,
+        DefaultFunctions.Floor,
+        DefaultFunctions.Ceil,
+        DefaultFunctions.Log,
+        DefaultFunctions.Log2,
+        DefaultFunctions.Log10,
+        DefaultFunctions.Abs,
+        DefaultFunctions.Deg,
+        DefaultFunctions.Rad
     };
 }

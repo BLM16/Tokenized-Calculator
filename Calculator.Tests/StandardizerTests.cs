@@ -8,7 +8,7 @@ namespace BLM16.Util.Calculator.Tests;
 [TestClass]
 public class StandardizerTests
 {
-    private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList, Calculator.DefaultConstantList);
+    private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList, Calculator.DefaultConstantList, Calculator.DefaultFunctionList);
 
     /// <summary>
     /// Checks that whitespace is correctly removed from the equations
@@ -49,6 +49,22 @@ public class StandardizerTests
 
     #endregion
 
+    /// <summary>
+    /// Checks that functions are correctly evaluated
+    /// </summary>
+    /// <param name="equation">The equation to standardize</param>
+    /// <param name="expected">The expected output</param>
+    [DataTestMethod]
+    [DataRow("sqrt(64)", "(8)")]
+    [DataRow("34log(100)", "34*(2)")]
+    public void ComputeFunctions_ComputesFunctions(string equation, string expected)
+        => Assert.AreEqual(expected, standardizer.Standardize(equation));
+
+    /// <summary>
+    /// Checks that constants are correctly replaced by their values
+    /// </summary>
+    /// <param name="equation">The equation to standardize</param>
+    /// <param name="expected">The expected output</param>
     [DataTestMethod]
     [DataRow("pi", "(3.141592653589793)")]
     [DataRow("e", "(2.718281828459045)")]
@@ -59,7 +75,7 @@ public class StandardizerTests
     /// <summary>
     /// Checks that multiplication signs are inserted correctly around brackets
     /// </summary>
-    /// <param name="equation">The equatino to standardize</param>
+    /// <param name="equation">The equation to standardize</param>
     /// <param name="expected">The expected output</param>
     [DataTestMethod]
     [DataRow("35(14+2)", "35*(14+2)")]
