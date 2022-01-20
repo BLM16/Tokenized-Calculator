@@ -12,8 +12,6 @@ public class LexerTests
 {
     private readonly Lexer lexer = new(Calculator.DefaultOperatorList);
 
-    #region Parse.Tests
-
     /// <summary>
     /// Checks that equations are correctly tokenized
     /// </summary>
@@ -95,6 +93,4 @@ public class LexerTests
     [DataRow("134+-8")]
     public void Parse_ExceptionOnConsecutiveOperators(string equation)
         => lexer.Parse(equation);
-
-    #endregion
 }
