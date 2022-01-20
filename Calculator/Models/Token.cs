@@ -23,33 +23,57 @@ public struct Token
     /// </summary>
     public readonly TokenType Type;
     /// <summary>
-    /// The value of the token
+    /// The value of the token if it is a string
     /// </summary>
-    public object Value;
+    public string StrVal { get; set; } = string.Empty;
+    /// <summary>
+    /// The value of the token if it is an operator
+    /// </summary>
+    public Operator OpVal { get; set; } = default;
 
-    public Token(TokenType type, object value)
+    public Token(TokenType type, string value)
     {
         Type = type;
-        Value = value;
+        StrVal = value;
+    }
+
+    public Token(TokenType type, char value) : this(type, value.ToString()) { }
+
+    public Token(TokenType type, Operator value)
+    {
+        Type = type;
+        OpVal = value;
     }
 
     #region Overrides
 
-    public override bool Equals(object obj) => obj is Token @token
-                                                && Type == @token.Type
-                                                && Value.Equals(@token.Value);
-
-    public override int GetHashCode() => HashCode.Combine(Type, Value);
-
-    public static bool operator ==(Token left, Token right)
+    public override bool Equals(object obj)
     {
-        return left.Equals(right);
+        if (obj is not Token)
+        {
+            return false;
+        }
+
+        var token = (Token)obj;
+        bool areValsEqual;
+
+        if (Type == TokenType.OPERATOR)
+        {
+            areValsEqual = OpVal.Equals(token.OpVal);
+        }
+        else
+        {
+            areValsEqual = StrVal.Equals(token.StrVal);
+        }
+
+        return Type == token.Type && areValsEqual;
     }
 
-    public static bool operator !=(Token left, Token right)
-    {
-        return !(left == right);
-    }
+    public override int GetHashCode() => HashCode.Combine(Type, StrVal, OpVal);
+
+    public static bool operator ==(Token left, Token right) => left.Equals(right);
+
+    public static bool operator !=(Token left, Token right) => !left.Equals(right);
 
     #endregion
 }

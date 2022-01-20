@@ -1,7 +1,5 @@
-<h1>
-    <img src="./icon.png" width="32" height="32" />
-    Tokenized Calculator
-</h1>
+Tokenized Calculator
+====================
 
 [![C#](https://img.shields.io/static/v1?label=C%23&message=v10&color=brightgreen&link=https://docs.microsoft.com/en-us/dotnet/)](https://docs.microsoft.com/en-us/dotnet/) [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License&link=https://mit-license.org/)](https://github.com/BLM16/Tokenized-Calculator/blob/master/LICENSE)
 

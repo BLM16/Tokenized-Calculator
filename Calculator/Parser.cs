@@ -39,24 +39,24 @@ internal class Parser
             switch (t.Type)
             {
                 case TokenType.NUMBER:
-                    values.Push(double.Parse(t.Value.ToString()));
+                    values.Push(double.Parse(t.StrVal));
                     break;
 
                 case TokenType.OPERATOR:
                     // Push the operator to the stack if there are no operators as precedence cannot be determined
                     if (operators.Count == 0)
                     {
-                        operators.Push(t.Value as Operator);
+                        operators.Push(t.OpVal);
                     }
                     // Push the operator to the stack if the previous operator has a lower precedence
-                    else if (t.Value as Operator > operators.Peek())
+                    else if (t.OpVal > operators.Peek())
                     {
-                        operators.Push(t.Value as Operator);
+                        operators.Push(t.OpVal);
                     }
                     else
                     {
                         // Continuously evaluate the equation from the stacks while it has precedence
-                        while (operators.Count > 0 && !(t.Value as Operator > operators.Peek()))
+                        while (operators.Count > 0 && !(t.OpVal > operators.Peek()))
                         {
                             var a = values.Pop();
                             var b = values.Pop();
@@ -65,7 +65,7 @@ internal class Parser
                             values.Push(o.Evaluate(b, a));
                         }
                         // Push the current operator to the stack
-                        operators.Push(t.Value as Operator);
+                        operators.Push(t.OpVal);
                     }
                     break;
 

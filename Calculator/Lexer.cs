@@ -41,7 +41,7 @@ internal class Lexer
                 if (tokens.Count == 0 || t.Type != TokenType.NUMBER)
                 {
                     // Prepend a zero if the number starts with a decimal point
-                    object value = c == '.' ? $"0{c}" : c;
+                    var value = c == '.' ? $"0{c}" : c.ToString();
                     if (c == '.' && (isLast || !"0123456789".Contains(equation[i + 1])))
                     {
                         throw new MathSyntaxException("Malformed double: digits must trail the decimal point");
@@ -50,7 +50,7 @@ internal class Lexer
                 }
                 else
                 {
-                    var cur = t.Value.ToString();
+                    var cur = t.StrVal;
                     if (c == '.' && cur.Contains('.'))
                     {
                         throw new MathSyntaxException($"Malformed double: cannot contain more than one decimal point");
@@ -62,7 +62,7 @@ internal class Lexer
                     else
                     {
                         // The current and previous values are numbers so append the current to the previous
-                        tokens[^1] = t with { Value = cur + c };
+                        tokens[^1] = t with { StrVal = cur + c };
                     }
                 }
             }
