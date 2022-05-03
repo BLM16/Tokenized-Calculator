@@ -34,8 +34,9 @@ internal class Parser
     {
         // Operators will be evaluated if they have precedence
         // Operators and numbers will be pushed to the stack without precedence
-        foreach (var t in tokens)
+        for (int i = 0; i < tokens.Count; i++)
         {
+            Token t = tokens[i];
             switch (t.Type)
             {
                 case TokenType.NUMBER:
@@ -43,6 +44,13 @@ internal class Parser
                     break;
 
                 case TokenType.OPERATOR:
+                    // Handle operators without values on both sides (non binary operations)
+                    if (i == 0 || i == tokens.Count - 1 || tokens[i - 1].Type is TokenType.OPERATOR or TokenType.LBRACK ||
+                         tokens[i + 1].Type == TokenType.RBRACK)
+                    {
+                        throw new MathSyntaxException("Operators must have values on both sides");
+                    }
+
                     // Push the operator to the stack if there are no operators as precedence cannot be determined
                     if (operators.Count == 0)
                     {

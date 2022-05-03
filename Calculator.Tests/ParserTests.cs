@@ -23,7 +23,17 @@ public class ParserTests
         => Assert.AreEqual(expected, parser.Evaluate(tokens));
 
     /// <summary>
-    /// The lexed equations and expected values to test with
+    /// Checks that malformed binary operations throw an exception
+    /// </summary>
+    /// <param name="tokens">The tokenized equation to test</param>
+    [DataTestMethod]
+    [DynamicData(nameof(MalformedBinaryOperatorEquations), DynamicDataSourceType.Property)]
+    [ExpectedException(typeof(MathSyntaxException))]
+    public void Evaluate_ExceptionOnMalformedBinaryOperators(List<Token> tokens)
+        => parser.Evaluate(tokens);
+
+    /// <summary>
+    /// The lexed equations and expected values to test correct evaluation with
     /// </summary>
     public static IEnumerable<object[]> LexedEquations
     {
@@ -143,6 +153,57 @@ public class ParserTests
                     new Token(TokenType.RBRACK, ')')
                 },
                 512d
+            };
+        }
+    }
+
+    /// <summary>
+    /// The lexed equations to test malformed binary operations
+    /// </summary>
+    public static IEnumerable<object[]> MalformedBinaryOperatorEquations
+    {
+        get
+        {
+            yield return new[]{
+                new List<Token>()
+                {
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition)
+                }
+            };
+            
+            yield return new[]{
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition)
+                }
+            };
+
+            yield return new[]{
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Division)
+                }
+            };
+
+            yield return new[]{
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Division)
+                }
+            };
+
+            yield return new[]{
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Division),
+                    new Token(TokenType.RBRACK, ')')
+                }
             };
         }
     }

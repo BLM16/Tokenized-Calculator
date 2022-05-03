@@ -8,7 +8,7 @@ namespace BLM16.Util.Calculator.Tests;
 [TestClass]
 public class StandardizerTests
 {
-    private readonly Standardizer standardizer = new(Calculator.DefaultOperatorList, Calculator.DefaultConstantList, Calculator.DefaultFunctionList);
+    private readonly Standardizer standardizer = new(Calculator.BuiltinOperatorList, Calculator.DefaultConstantList, Calculator.DefaultFunctionList);
 
     /// <summary>
     /// Checks that whitespace is correctly removed from the equations
@@ -48,6 +48,17 @@ public class StandardizerTests
         => standardizer.Standardize(equation);
 
     #endregion
+
+    /// <summary>
+    /// Checks that repeating operators are simplified where possible
+    /// </summary>
+    /// <param name="equation">The equation to standardize</param>
+    /// <param name="expected">The expected output</param>
+    [DataTestMethod]
+    [DataRow("3+-5", "3-5")]
+    [DataRow("22--5", "22+5")]
+    public void FixRepeatingOperators(string equation, string expected)
+        => Assert.AreEqual(expected, standardizer.Standardize(equation));
 
     /// <summary>
     /// Checks that functions are correctly evaluated

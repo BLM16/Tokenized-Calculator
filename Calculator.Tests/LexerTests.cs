@@ -10,7 +10,7 @@ namespace BLM16.Util.Calculator.Tests;
 [TestClass]
 public class LexerTests
 {
-    private readonly Lexer lexer = new(Calculator.DefaultOperatorList);
+    private readonly Lexer lexer = new(Calculator.BuiltinOperatorList);
 
     /// <summary>
     /// Checks that equations are correctly tokenized
@@ -34,8 +34,12 @@ public class LexerTests
             new Token(TokenType.OPERATOR, DefaultOperators.Division),
             new Token(TokenType.LBRACK, '('),
             new Token(TokenType.NUMBER, '5'),
+            new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+            new Token(TokenType.LBRACK, '('),
+            new Token(TokenType.NUMBER, '0'),
             new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
             new Token(TokenType.NUMBER, '3'),
+            new Token(TokenType.RBRACK, ')'),
             new Token(TokenType.RBRACK, ')')
         };
 
@@ -90,7 +94,106 @@ public class LexerTests
     [DataTestMethod]
     [ExpectedException(typeof(MathSyntaxException))]
     [DataRow("157+*3.2/6")]
-    [DataRow("134+-8")]
+    [DataRow("134/+8")]
     public void Parse_ExceptionOnConsecutiveOperators(string equation)
         => lexer.Parse(equation);
+
+    /// <summary>
+    /// Checks that subtraction signs are lexed into parenthesized binary expressions correctly
+    /// </summary>
+    /// <param name="equation">The equation to lex</param>
+    /// <param name="expected">The expected result</param>
+    [DataTestMethod]
+    [DynamicData(nameof(NegativeExpressions), DynamicDataSourceType.Property)]
+    public void Parse_WrapNegativeExpressions(string equation, List<Token> expected)
+        => CollectionAssert.AreEqual(expected, lexer.Parse(equation));
+
+    /// <summary>
+    /// The equations and expected values to test subtraction and negatives with
+    /// </summary>
+    private static IEnumerable<object[]> NegativeExpressions
+    {
+        get
+        {
+            yield return new object[]
+            {
+                "8-4",
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '8'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '4'),
+                    new Token(TokenType.RBRACK, ')'),
+                }
+            };
+            
+            yield return new object[]
+            {
+                "2-(17-5)",
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, '2'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, "17"),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')')
+                }
+            };
+
+            yield return new object[]
+            {
+                "12/-3",
+                new List<Token>()
+                {
+                    new Token(TokenType.NUMBER, "12"),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Division),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '3'),
+                    new Token(TokenType.RBRACK, ')')
+                }
+            };
+
+            yield return new object[]
+            {
+                "-6*(-3-5)",
+                new List<Token>()
+                {
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '6'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Multiplication),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '3'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Addition),
+                    new Token(TokenType.LBRACK, '('),
+                    new Token(TokenType.NUMBER, '0'),
+                    new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
+                    new Token(TokenType.NUMBER, '5'),
+                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')')
+                }
+            };
+        }
+    }
 }

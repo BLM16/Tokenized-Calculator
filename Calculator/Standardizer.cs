@@ -36,7 +36,7 @@ internal class Standardizer
     /// </summary>
     /// <param name="equation">The equation to standardize</param>
     /// <returns>The provided equation that is completely standardized</returns>
-    public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(ComputeFunctions(FixBrackets(RemoveWhitespace(equation)))));
+    public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(ComputeFunctions(FixBrackets(FixRepeatingOperators(RemoveWhitespace(equation))))));
 
     /// <summary>
     /// Removes all the whitespace characters in a string
@@ -81,6 +81,21 @@ internal class Standardizer
             }
         }
 
+        return equation;
+    }
+
+    /// <summary>
+    /// Replaces repeated operators in an equation with a simper representation
+    /// </summary>
+    /// <param name="equation">The equation to standardize repeating operators in</param>
+    /// <returns>The provided equation with standardized repeating operators</returns>
+    public static string FixRepeatingOperators(string equation)
+    {
+        while (equation.Contains("--") || equation.Contains("+-"))
+        {
+            equation = equation.Replace("--", "+");
+            equation = equation.Replace("+-", "-");
+        }
         return equation;
     }
 

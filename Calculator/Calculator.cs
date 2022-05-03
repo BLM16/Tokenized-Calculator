@@ -1,4 +1,5 @@
 ﻿using BLM16.Util.Calculator.Models;
+using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Calculator.Tests")]
 namespace BLM16.Util.Calculator;
@@ -34,13 +35,16 @@ public class Calculator
     /// </summary>
     private readonly Function[] functions;
 
-    /// <param name="operators">The list of operators the calculator recognizes. Defaults to <see cref="DefaultOperatorList"/> if no value is provided.</param>
+    /// <param name="operators">The list of operators the calculator recognizes. Always includes <see cref="BuiltinOperatorList"/>.</param>
     /// <param name="constants">The list of constants the calculator recognizes. Defaults to <see cref="DefaultConstantList"/> if no value is provided.</param>
     /// <param name="functions">The list of functions the calculator recognizes. Defaults to <see cref="DefaultFunctionList"/> if no value is provided.</param>
     public Calculator(Operator[] operators = null, Constant[] constants = null, Function[] functions = null)
     {
+        var _ops = new List<Operator>(BuiltinOperatorList); // Add default operators
+        _ops.AddRange(operators ?? System.Array.Empty<Operator>()); // Add provided operators if any
+
         // Use the default operators if no operators are provided
-        this.operators = operators ?? DefaultOperatorList;
+        this.operators = _ops.ToArray();
         // Use the default constants if no constants are provided
         this.constants = constants ?? DefaultConstantList;
         // Use the default functions if no functions are provided
@@ -71,7 +75,7 @@ public class Calculator
     /// <summary>
     /// A list of the default operators used by the calculator
     /// </summary>
-    public static Operator[] DefaultOperatorList => new Operator[]
+    public static Operator[] BuiltinOperatorList => new Operator[]
     {
         DefaultOperators.Addition,
         DefaultOperators.Subtraction,

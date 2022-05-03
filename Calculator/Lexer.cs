@@ -28,6 +28,7 @@ internal class Lexer
     public List<Token> Parse(string equation)
     {
         var tokens = new List<Token>();
+        var negCount = 0;
 
         // Loop through each char and convert to tokens
         for (int i = 0; i < equation.Length; i++)
@@ -80,7 +81,20 @@ internal class Lexer
                 {
                     throw new MathSyntaxException("Malformed expression: operator requires numbers to operate on");
                 }
-                if (tokens.LastOrDefault().Type == TokenType.OPERATOR)
+
+                if (c == '-')
+                {
+                    negCount++;
+                    if (tokens.Count > 0 && tokens.LastOrDefault().Type != TokenType.OPERATOR && tokens.LastOrDefault().Type != TokenType.LBRACK)
+                    {
+                        tokens.Add(new Token(TokenType.OPERATOR, DefaultOperators.Addition));
+                    }
+                    tokens.Add(new Token(TokenType.LBRACK, '('));
+                    tokens.Add(new Token(TokenType.NUMBER, '0'));
+                    tokens.Add(new Token(TokenType.OPERATOR, DefaultOperators.Subtraction));
+                    continue;
+                }
+                else if (tokens.LastOrDefault().Type == TokenType.OPERATOR)
                 {
                     throw new MathSyntaxException("Consecutive operators found");
                 }
@@ -92,7 +106,13 @@ internal class Lexer
 
                 if (op.Any())
                 {
-                    tokens.Add(new Token(TokenType.OPERATOR, op.First()));
+                    var cur_op = op.First();
+                    if (negCount > 0 && !(cur_op > DefaultOperators.Subtraction))
+                    {
+                        tokens.Add(new Token(TokenType.RBRACK, ')'));
+                        negCount--;
+                    }
+                    tokens.Add(new Token(TokenType.OPERATOR, cur_op));
                 }
                 else
                 {
@@ -100,6 +120,13 @@ internal class Lexer
                     throw new MathSyntaxException($"Unrecognized operator: {c}");
                 }
             }
+        }
+
+        // If negative was the last operator
+        while (negCount > 0)
+        {
+            tokens.Add(new Token(TokenType.RBRACK, ')'));
+            negCount--;
         }
 
         return tokens;
