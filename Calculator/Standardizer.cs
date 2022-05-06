@@ -110,7 +110,7 @@ internal class Standardizer
         // Maps function's symbols to their operation
         var funcsDict = new Dictionary<string, Func<double, string>>();
         Array.ForEach(Functions, f =>
-            Array.ForEach(f.Symbols, s => funcsDict.Add(s, f.Operation)));
+            Array.ForEach(f.Symbols, s => funcsDict.Add(s.ToLower(), f.Operation)));
 
         // Order the dictionary by key length
         List<KeyValuePair<string, Func<double, string>>> functions = funcsDict.OrderByDescending(e => e.Key.Length).ToList();
@@ -176,7 +176,7 @@ internal class Standardizer
         // Maps the constant's symbols to its value
         var constants = new Dictionary<string, double>();
         Array.ForEach(Constants, c =>
-            Array.ForEach(c.Symbols, s => constants.Add(s, c.Value)));
+            Array.ForEach(c.Symbols, s => constants.Add(s.ToLower(), c.Value)));
 
         // Order the dictionary by key length, replace all the keys in the equation with the values
         constants.OrderByDescending(e => e.Key.Length)
