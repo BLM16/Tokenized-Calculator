@@ -28,7 +28,8 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - uses: ./.github/actions/build
+      - name: Build
+        uses: ./.github/actions/build
         with:
           runs-on: ubuntu-latest
 
