@@ -30,8 +30,6 @@ jobs:
 
       - name: Build
         uses: ./.github/actions/build
-        with:
-          runs-on: ubuntu-latest
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
