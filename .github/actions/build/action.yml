@@ -2,10 +2,6 @@ name: Build
 description: 'Builds the libraries'
 
 inputs:
-  runs-on:
-    required: false
-    default: 'ubuntu-latest'
-    type: string
   configuration:
     required: false
     default: 'Debug'

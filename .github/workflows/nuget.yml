@@ -8,7 +8,7 @@ jobs:
   publish:
     name: Publish to NuGet.org
     runs-on: ubuntu-latest
-    if: github.repository == 'BLM16/Tokenized-Calculator'
+    if: ${{ github.repository == 'BLM16/Tokenized-Calculator' }}
     
     steps:
       - uses: actions/checkout@v2
