@@ -18,15 +18,12 @@ jobs:
         with:
           configuration: Release
 
-      # Get the Release's name and strip the v from vx.x.x
+      # Get the library version specified in the csproj file
       - name: Parse Version
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
         id: parse-version
-        run: |
-          version=${release:1}
-          echo "::set-output name=version::$version"
-        shell: bash
-        env:
-          release: ${{ github.event.release.name }}
+        with:
+          proj-path: Calculator/Calculator.csproj
 
       - name: Push to NuGet.org
         run: dotnet nuget push ./Calculator/bin/Release/BLM16.Util.Calculator.${{ steps.parse-version.outputs.version }}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
