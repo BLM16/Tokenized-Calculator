@@ -1,5 +1,10 @@
 ﻿using System;
 using BLM16.Util.Calculator;
+using BLM16.Util.Calculator.Models;
+
+var modulusOperator = new Operator('%', 20, (a, b) => a % b);
+
+var calculator = new Calculator(new[] { modulusOperator });
 
 while (true)
 {
@@ -8,7 +13,6 @@ while (true)
         Console.Write("Enter your equation: ");
         var eq = Console.ReadLine();
 
-        var calculator = new Calculator();
         var res = calculator.Calculate(eq);
 
         Console.WriteLine($"Result: {res}\n");

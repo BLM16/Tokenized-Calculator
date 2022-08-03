@@ -151,7 +151,8 @@ internal class Standardizer
                 }
 
                 // Create a new calculator with the same operators, constants, and functions to recursively evalutate the function's contents
-                var calc = new Calculator(Operators, Constants, Functions);
+                // We must use Except to remove the builtin operators as they will be added by default leading to duplicated operators
+                var calc = new Calculator(Operators.Except(Calculator.BuiltinOperatorList).ToArray(), Constants, Functions);
 
                 // Get the value captured by the function
                 var sub = equation[(startIndex + f.Key.Length + 1)..endIndex];

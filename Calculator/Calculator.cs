@@ -1,5 +1,6 @@
 ﻿using BLM16.Util.Calculator.Models;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Calculator.Tests")]
 namespace BLM16.Util.Calculator;
@@ -40,15 +41,21 @@ public class Calculator
     /// <param name="functions">The list of functions the calculator recognizes. Defaults to <see cref="DefaultFunctionList"/> if no value is provided.</param>
     public Calculator(Operator[] operators = null, Constant[] constants = null, Function[] functions = null)
     {
-        var _ops = new List<Operator>(BuiltinOperatorList); // Add default operators
-        _ops.AddRange(operators ?? System.Array.Empty<Operator>()); // Add provided operators if any
+        // Verify operators are unique
+        this.operators = new UniqueList<Operator>((a, b) => a.Symbol.Equals(b.Symbol))
+            .With(BuiltinOperatorList) // Add default operators
+            .With(operators ?? Array.Empty<Operator>()) // Add provided operators if there are any
+            .ToArray(); 
 
-        // Use the default operators if no operators are provided
-        this.operators = _ops.ToArray();
-        // Use the default constants if no constants are provided
-        this.constants = constants ?? DefaultConstantList;
-        // Use the default functions if no functions are provided
-        this.functions = functions ?? DefaultFunctionList;
+        // Verify constants are unique
+        this.constants = new UniqueList<Constant>((a, b) => a.Symbols.Intersect(b.Symbols).Any())
+            .With(constants ?? DefaultConstantList) // Use the default constants if no constants are provided
+            .ToArray();
+
+        // Verify functions are unique
+        this.functions = new UniqueList<Function>((a, b) => a.Symbols.Intersect(b.Symbols).Any())
+            .With(functions ?? DefaultFunctionList) // Use the default functions if no functions are provided
+            .ToArray();
 
         standardizer = new Standardizer(this.operators, this.constants, this.functions);
         lexer = new Lexer(this.operators);
@@ -72,10 +79,12 @@ public class Calculator
         return result;
     }
 
+    #region Default Symbols
+
     /// <summary>
     /// A list of the default operators used by the calculator
     /// </summary>
-    public static Operator[] BuiltinOperatorList => new Operator[]
+    public static Operator[] BuiltinOperatorList => new[]
     {
         DefaultOperators.Addition,
         DefaultOperators.Subtraction,
@@ -87,7 +96,7 @@ public class Calculator
     /// <summary>
     /// A list of the default constants used by the calculator
     /// </summary>
-    public static Constant[] DefaultConstantList => new Constant[]
+    public static Constant[] DefaultConstantList => new[]
     {
         DefaultConstants.PI,
         DefaultConstants.E
@@ -96,7 +105,7 @@ public class Calculator
     /// <summary>
     /// A list of the default functions used by the calculator
     /// </summary>
-    public static Function[] DefaultFunctionList => new Function[]
+    public static Function[] DefaultFunctionList => new[]
     {
         DefaultFunctions.Sqrt,
         DefaultFunctions.Cbrt,
@@ -115,4 +124,6 @@ public class Calculator
         DefaultFunctions.Deg,
         DefaultFunctions.Rad
     };
+    
+    #endregion
 }

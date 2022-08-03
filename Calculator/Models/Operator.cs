@@ -21,6 +21,12 @@ public class Operator
     /// </summary>
     private Delegate Operation { get; set; }
 
+    /// <summary>
+    /// Creates a new binary operator used by the <see cref="Calculator"/>
+    /// </summary>
+    /// <param name="op">The operator's symbol</param>
+    /// <param name="order">The operator's order of precedence (+- = 10, */ = 20, ^ = 30)</param>
+    /// <param name="operation">The binary operation to be performed</param>
     public Operator(char op, int order, Func<double, double, double> operation)
     {
         Symbol = op;
@@ -48,9 +54,9 @@ public class Operator
     public static bool operator <(Operator left, Operator right) => left.Order < right.Order;
 
     public override bool Equals(object obj) => obj is Operator @operator
-                                                && Symbol == @operator.Symbol
-                                                && Order == @operator.Order
-                                                && EqualityComparer<Delegate>.Default.Equals(Operation, @operator.Operation);
+                                               && Symbol.Equals(@operator.Symbol)
+                                               && Order.Equals(@operator.Order)
+                                               && EqualityComparer<Delegate>.Default.Equals(Operation, @operator.Operation);
 
     public override int GetHashCode() => HashCode.Combine(Symbol, Order, Operation);
 
@@ -66,29 +72,29 @@ public static class DefaultOperators
     /// The default addition operator
     /// </summary>
     public static Operator Addition
-        => new('+', 1, (double num1, double num2) => num1 + num2);
+        => new('+', 10, (double num1, double num2) => num1 + num2);
 
     /// <summary>
     /// The default subtraction operator
     /// </summary>
     public static Operator Subtraction
-        => new('-', 1, (double num1, double num2) => num1 - num2);
+        => new('-', 10, (double num1, double num2) => num1 - num2);
 
     /// <summary>
     /// The default multiplication operator
     /// </summary>
     public static Operator Multiplication
-        => new('*', 2, (double num1, double num2) => num1 * num2);
+        => new('*', 20, (double num1, double num2) => num1 * num2);
 
     /// <summary>
     /// The default division operator
     /// </summary>
     public static Operator Division
-        => new('/', 2, (double num1, double num2) => num1 / num2);
+        => new('/', 20, (double num1, double num2) => num1 / num2);
 
     /// <summary>
     /// The default exponent operator
     /// </summary>
     public static Operator Exponent
-        => new('^', 3, (double num1, double exponent) => Math.Pow(num1, exponent));
+        => new('^', 30, (double num1, double exponent) => Math.Pow(num1, exponent));
 }
