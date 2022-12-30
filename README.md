@@ -1,7 +1,7 @@
 Tokenized Calculator
 ====================
 
-[![C#](https://img.shields.io/static/v1?label=C%23&message=v10&color=brightgreen&link=https://docs.microsoft.com/en-us/dotnet/)](https://docs.microsoft.com/en-us/dotnet/) [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License&link=https://mit-license.org/)](https://github.com/BLM16/Tokenized-Calculator/blob/master/LICENSE) [![Nuget](https://img.shields.io/nuget/v/BLM16.Util.Calculator?label=Nuget&logo=nuget)](https://www.nuget.org/packages/BLM16.Util.Calculator/)
+[![C#](https://img.shields.io/static/v1?label=C%23&message=v11&color=brightgreen)](https://docs.microsoft.com/en-us/dotnet/) [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License)](https://github.com/BLM16/Tokenized-Calculator/blob/master/LICENSE) [![Nuget](https://img.shields.io/nuget/v/BLM16.Util.Calculator?label=Nuget&logo=nuget)](https://www.nuget.org/packages/BLM16.Util.Calculator/)
 
 This library parses and solves math equations from strings. Order of Operations Rules are followed.
 
@@ -16,8 +16,7 @@ This library parses and solves math equations from strings. Order of Operations 
 ---
 
 Predefined operators, constants, and functions exist for your convenience. Not all of them used by default however.
-* `Phi` is defined as a constant, however it is not used by default. It exists to be used with custom constants as needed.
-* Hyperbolic trigonometric functions are defined and not used by default.
+In the calculator's initializer you can add things from DefaultOperators, DefaultConstants, DefaultFunctions, or your own custom values.
 
 ## License
 This code is licensed under the [MIT License](https://github.com/BLM16/Tokenized-Calculator/blob/master/LICENSE)

@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
       
     <Authors>BLM16</Authors>
     <Company>BLM16</Company>
     <Copyright>Copyright © 2021 Bradley Myers. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.2.0</Version>
+    <Version>4.3.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>calculator; math; solve</PackageTags>
     <PackageId>BLM16.Util.$(AssemblyName)</PackageId>
@@ -19,6 +19,7 @@
     <RootNamespace>BLM16.Util.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <PackageIcon>icon.png</PackageIcon>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Title>Calculator</Title>
   </PropertyGroup>
 
   <ItemGroup>

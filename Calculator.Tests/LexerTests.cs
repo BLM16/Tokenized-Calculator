@@ -129,7 +129,7 @@ public class LexerTests
                     new Token(TokenType.RBRACK, ')'),
                 }
             };
-            
+
             yield return new object[]
             {
                 "2-(17-5)",
@@ -177,6 +177,7 @@ public class LexerTests
                     new Token(TokenType.NUMBER, '0'),
                     new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
                     new Token(TokenType.NUMBER, '6'),
+                    new Token(TokenType.RBRACK, ')'),
                     new Token(TokenType.OPERATOR, DefaultOperators.Multiplication),
                     new Token(TokenType.LBRACK, '('),
                     new Token(TokenType.LBRACK, '('),
@@ -188,8 +189,7 @@ public class LexerTests
                     new Token(TokenType.NUMBER, '0'),
                     new Token(TokenType.OPERATOR, DefaultOperators.Subtraction),
                     new Token(TokenType.NUMBER, '5'),
-                    new Token(TokenType.RBRACK, ')'),
-                    new Token(TokenType.RBRACK, ')'),
+                    new Token(TokenType.RBRACK, ')'), 
                     new Token(TokenType.RBRACK, ')'),
                     new Token(TokenType.RBRACK, ')')
                 }

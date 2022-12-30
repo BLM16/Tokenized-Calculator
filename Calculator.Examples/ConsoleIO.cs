@@ -2,9 +2,10 @@
 using BLM16.Util.Calculator;
 using BLM16.Util.Calculator.Models;
 
-var modulusOperator = new Operator('%', 20, (a, b) => a % b);
-
-var calculator = new Calculator(new[] { modulusOperator });
+var calculator = new Calculator
+{
+    Operators = new[] { DefaultOperators.Modulus }
+};
 
 while (true)
 {

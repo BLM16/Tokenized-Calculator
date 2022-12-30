@@ -36,13 +36,13 @@ public struct Constant
 public static class DefaultConstants
 {
     /// <summary>
-    /// The constant PI
+    /// The constant PI. Uses the value of <see cref="Math.PI"/>.
     /// </summary>
     public static Constant PI
         => new(Math.PI, "pi", "π");
 
     /// <summary>
-    /// Euler's number
+    /// The constant E. Uses the value of <see cref="Math.E"/>.
     /// </summary>
     public static Constant E
         => new(Math.E, "e");
@@ -52,4 +52,16 @@ public static class DefaultConstants
     /// </summary>
     public static Constant Phi
         => new(1.6180339887498948, "phi", "φ");
+
+    /// <summary>
+    /// 2π. Uses the value of <see cref="Math.Tau"/>.
+    /// </summary>
+    public static Constant Tau
+        => new(Math.Tau, "tau", "τ");
+
+    /// <summary>
+    /// The speed of light in m/s
+    /// </summary>
+    public static Constant C
+        => new(299792458, "c");
 }

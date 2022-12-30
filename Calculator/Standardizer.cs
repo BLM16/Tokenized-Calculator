@@ -9,7 +9,7 @@ namespace BLM16.Util.Calculator;
 /// <summary>
 /// Has the logic to standardize an equation into something the calculator can parse
 /// </summary>
-internal class Standardizer
+internal partial class Standardizer
 {
     /// <summary>
     /// The list of operators recognized by the calculator
@@ -38,25 +38,21 @@ internal class Standardizer
     /// <returns>The provided equation that is completely standardized</returns>
     public string Standardize(string equation) => AddMultiplicationSigns(ReplaceConstants(ComputeFunctions(FixBrackets(FixRepeatingOperators(RemoveWhitespace(equation))))));
 
-    /// <summary>
-    /// Removes all the whitespace characters in a string
-    /// </summary>
-    /// <param name="equation">The equation to remove whitespace from</param>
-    /// <returns>The provided equation with removed whitespace</returns>
-    private static string RemoveWhitespace(string equation)
-    {
-        // Matches all whitespace characters
-        var whitespaceChars = new Regex(@"\s+");
-        return whitespaceChars.Replace(equation, "");
-    }
+	/// <summary>
+	/// Removes all the whitespace characters in a string
+	/// </summary>
+	/// <param name="equation">The equation to remove whitespace from</param>
+	/// <returns>The provided equation with removed whitespace</returns>
+	private static string RemoveWhitespace(string equation)
+        => MatchWhiteSpace().Replace(equation, "");
 
-    /// <summary>
-    /// Fixes the equation by ensuring there are equal number of brackets
-    /// </summary>
-    /// <param name="equation">The equation to fix the brackets in</param>
-    /// <exception cref="MathSyntaxException">Thrown when there are more closing brackets than opening ones.</exception>
-    /// <returns>The provided equation with the correct number of brackets</returns>
-    private static string FixBrackets(string equation)
+	/// <summary>
+	/// Fixes the equation by ensuring there are equal number of brackets
+	/// </summary>
+	/// <param name="equation">The equation to fix the brackets in</param>
+	/// <exception cref="MathSyntaxException">Thrown when there are more closing brackets than opening ones.</exception>
+	/// <returns>The provided equation with the correct number of brackets</returns>
+	private static string FixBrackets(string equation)
     {
         int lBrack = 0, rBrack = 0;
 
@@ -151,8 +147,12 @@ internal class Standardizer
                 }
 
                 // Create a new calculator with the same operators, constants, and functions to recursively evalutate the function's contents
-                // We must use Except to remove the builtin operators as they will be added by default leading to duplicated operators
-                var calc = new Calculator(Operators.Except(Calculator.BuiltinOperatorList).ToArray(), Constants, Functions);
+                var calc = new Calculator
+                {
+                    Operators = Operators.Except(Calculator.BuiltinOperatorList).ToArray(), // Builtins would result in duplicates and throw
+                    Constants = Constants,
+                    Functions = Functions
+                };
 
                 // Get the value captured by the function
                 var sub = equation[(startIndex + f.Key.Length + 1)..endIndex];
@@ -213,4 +213,7 @@ internal class Standardizer
 
         return string.Join("", eq);
     }
+
+    [GeneratedRegex("\\s+")]
+    private static partial Regex MatchWhiteSpace();
 }

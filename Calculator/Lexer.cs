@@ -107,7 +107,7 @@ internal class Lexer
                 if (op.Any())
                 {
                     var cur_op = op.First();
-                    if (negCount > 0 && !(cur_op > DefaultOperators.Subtraction))
+                    if (negCount > 0)
                     {
                         tokens.Add(new Token(TokenType.RBRACK, ')'));
                         negCount--;

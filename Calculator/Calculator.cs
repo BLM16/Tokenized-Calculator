@@ -1,5 +1,6 @@
 ﻿using BLM16.Util.Calculator.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Calculator.Tests")]
@@ -11,55 +12,77 @@ namespace BLM16.Util.Calculator;
 public class Calculator
 {
     /// <summary>
-    /// The Standardizer for standardizing the equation
+    /// Contains a list of all the symbols used
     /// </summary>
-    private readonly Standardizer standardizer;
-    /// <summary>
-    /// The Lexer for tokenizing the equation
-    /// </summary>
-    private readonly Lexer lexer;
-    /// <summary>
-    /// The Parser for evaluating the equation
-    /// </summary>
-    private readonly Parser parser;
+    private readonly List<string> _symbols = new();
+
+    private Operator[] _operators = Array.Empty<Operator>();
+    private Constant[] _constants = DefaultConstantList;
+    private Function[] _functions = DefaultFunctionList;
 
     /// <summary>
-    /// The operators the calculator can use
+    /// The operators the calculator can use.
+    /// Always includes <see cref="BuiltinOperatorList"/>.
     /// </summary>
-    private readonly Operator[] operators;
+    /// <exception cref="ArgumentException">Thrown when duplicate operators are encountered.</exception>
+    public Operator[] Operators
+    {
+        get => _operators;
+        init
+        {
+            var symbols = value.Select(o => o.Symbol.ToString());
+
+            CheckDuplicateSymbolsAndThrow(symbols);
+
+            _symbols.AddRange(symbols);
+            _operators = _operators.Concat(value).ToArray();
+        }
+    }
+
     /// <summary>
     /// The constants the calculator can use
     /// </summary>
-    private readonly Constant[] constants;
+    /// <exception cref="ArgumentException">Thrown when duplicate constants are encountered.</exception>
+    public Constant[] Constants
+    {
+        get => _constants;
+        init
+        {
+            var symbols = value.SelectMany(c => c.Symbols);
+
+            CheckDuplicateSymbolsAndThrow(symbols);
+
+            _symbols.AddRange(symbols);
+            _constants = value;
+        }
+    }
+
     /// <summary>
     /// The functions the calculator can use
     /// </summary>
-    private readonly Function[] functions;
-
-    /// <param name="operators">The list of operators the calculator recognizes. Always includes <see cref="BuiltinOperatorList"/>.</param>
-    /// <param name="constants">The list of constants the calculator recognizes. Defaults to <see cref="DefaultConstantList"/> if no value is provided.</param>
-    /// <param name="functions">The list of functions the calculator recognizes. Defaults to <see cref="DefaultFunctionList"/> if no value is provided.</param>
-    public Calculator(Operator[] operators = null, Constant[] constants = null, Function[] functions = null)
+    /// <exception cref="ArgumentException">Thrown when duplicate functions are encountered.</exception>
+    public Function[] Functions
     {
-        // Verify operators are unique
-        this.operators = new UniqueList<Operator>((a, b) => a.Symbol.Equals(b.Symbol))
-            .With(BuiltinOperatorList) // Add default operators
-            .With(operators ?? Array.Empty<Operator>()) // Add provided operators if there are any
-            .ToArray(); 
+        get => _functions;
+        init
+        {
+            var symbols = value.SelectMany(f => f.Symbols);
 
-        // Verify constants are unique
-        this.constants = new UniqueList<Constant>((a, b) => a.Symbols.Intersect(b.Symbols).Any())
-            .With(constants ?? DefaultConstantList) // Use the default constants if no constants are provided
-            .ToArray();
+            CheckDuplicateSymbolsAndThrow(symbols);
+                
+            _symbols.AddRange(symbols);
+            _functions = value;
+        }
+    }
 
-        // Verify functions are unique
-        this.functions = new UniqueList<Function>((a, b) => a.Symbols.Intersect(b.Symbols).Any())
-            .With(functions ?? DefaultFunctionList) // Use the default functions if no functions are provided
-            .ToArray();
-
-        standardizer = new Standardizer(this.operators, this.constants, this.functions);
-        lexer = new Lexer(this.operators);
-        parser = new Parser();
+    public Calculator()
+    {
+        // Initialize Operators here instead of the backing field so the custom
+        //  init logic adds the operator symbols to _symbols.
+        // Functions and Constants are overwritten instead of preserving builtins
+        //  therefore their symbols should not be added to _symbols and the init
+        //  logic does not need to run. This stops builtin operator duplication.
+        Operators = BuiltinOperatorList;
     }
 
     /// <summary>
@@ -72,11 +95,30 @@ public class Calculator
     {
         equation = equation.ToLower();
 
-        equation = standardizer.Standardize(equation);
-        var tokens = lexer.Parse(equation);
-        var result = parser.Evaluate(tokens);
+        equation = new Standardizer(Operators, Constants, Functions).Standardize(equation);
+        var tokens = new Lexer(Operators).Parse(equation);
+        var result = new Parser().Evaluate(tokens);
 
         return result;
+    }
+
+    /// <summary>
+    /// Checks if <paramref name="symbols"/> contains any duplicate elements
+    /// or if symbols has any duplicates in <see cref="_symbols"/>.
+    /// </summary>
+    /// <param name="symbols">The symbols to check duplicates for</param>
+    /// <exception cref="ArgumentException">Thrown when duplicate elements are encountered.</exception>
+    private void CheckDuplicateSymbolsAndThrow(IEnumerable<string> symbols)
+    {
+        var duplicateSymbolsWithExisting = symbols.Intersect(_symbols);
+        var duplicateSymbolsInGiven = symbols.GroupBy(s => s)
+                                             .Where(s => s.Count() > 1)
+                                             .Select(s => s.Key);
+
+        var duplicates = duplicateSymbolsWithExisting.Union(duplicateSymbolsInGiven).ToArray();
+        
+        if (duplicates.Length > 0)
+            throw new ArgumentException($"Duplicate symbols found: {string.Join(", ", duplicates)}");
     }
 
     #region Default Symbols
@@ -124,6 +166,6 @@ public class Calculator
         DefaultFunctions.Deg,
         DefaultFunctions.Rad
     };
-    
+
     #endregion
 }

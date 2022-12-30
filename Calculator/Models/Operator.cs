@@ -96,5 +96,23 @@ public static class DefaultOperators
     /// The default exponent operator
     /// </summary>
     public static Operator Exponent
-        => new('^', 30, (double num1, double exponent) => Math.Pow(num1, exponent));
+        => new('^', 30, Math.Pow);
+
+    /// <summary>
+    /// The default modulus operator.
+    /// </summary>
+    /// <remarks>
+    /// The % operator in C# is the remainder operator and does not perform mathematical modulus.
+    /// This operator should be used if mod is desired as opposed to remainder.
+    /// </remarks>
+    public static Operator Modulus
+        => new('%', 20, (double num1, double num2) =>
+        {
+            if (num2 == 0) throw new DivideByZeroException($"{num1} {Modulus.Symbol} {num2}");
+            if (num2 == -1) return 0;
+
+            double m = num1 % num2;
+            if (m < 0) m = (num2 < 0) ? m - num2 : m + num2;
+            return m;
+        });
 }

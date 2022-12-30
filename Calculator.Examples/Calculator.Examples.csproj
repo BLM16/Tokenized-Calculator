@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>Examples</RootNamespace>
 	  
     <Authors>Bradley Myers</Authors>
@@ -10,7 +10,7 @@
     <Copyright>Copyright © 2021 Bradley Myers. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>calculator</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
