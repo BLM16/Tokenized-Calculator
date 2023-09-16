@@ -8,7 +8,7 @@
     <Copyright>Copyright © 2021 Bradley Myers. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.3.0</Version>
+    <Version>4.4.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>calculator; math; solve</PackageTags>
     <PackageId>BLM16.Util.$(AssemblyName)</PackageId>

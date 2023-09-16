@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/BLM16/Tokenized-Calculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl />
-    <Version>4.1.0</Version>
+    <Version>4.4.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>calculator</PackageTags>
     <RootNamespace>BLM16.Util.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>

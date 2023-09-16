@@ -31,6 +31,15 @@ public class CalculatorTests
     public void Calculator_CalculatesEquation_WithDefaults(string equation, double expected)
         => Assert.AreEqual(expected, Calculator_WithDefaults.Calculate(equation));
 
+    [DataTestMethod]
+    [DataRow("sqrt(-1)")]
+    [DataRow("asin(5)")]
+    [DataRow("atanh(1)")]
+    [DataRow("ln(0)")]
+    [ExpectedException(typeof(MathSyntaxException))]
+    public void Calculator_ValidatesFunctions_ExceptionOnInvalidValues(string equation)
+        => Calculator_WithDefaults.Calculate(equation);
+
     #endregion
 
     #region With Customs
